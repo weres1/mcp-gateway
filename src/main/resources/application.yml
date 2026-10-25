@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+gateway:
+  # 控制台登录口令（X-Admin-Token）；客户端 MCP 口令见下方 api-keys / 控制台「密钥」
+  admin-token: ${GATEWAY_ADMIN_TOKEN:change-me}
+  data-dir: ${GATEWAY_DATA_DIR:${user.home}/.mcp-gateway}
+  # 客户端访问 /mcp 需携带其中之一（Bearer 或 X-API-Key）；留空列表 = 不鉴权
+  api-keys:
+    - ${GATEWAY_API_KEY:change-me}
+  request-timeout: 60s
+  upstreams:
+    # 工具会以 everything__echo 这种名字暴露
+    everything:
+      transport: stdio
+      command: npx
+      args: ["-y", "@modelcontextprotocol/server-everything"]
+    # Streamable HTTP 上游示例
+    # remote:
+    #   transport: streamable_http
+    #   url: http://localhost:3001
+    #   endpoint: /mcp
+    #   headers:
+    #     Authorization: Bearer xxx
+    # 旧版 SSE 上游示例
+    # legacy:
+    #   transport: sse
+    #   url: http://localhost:3002
+    #   endpoint: /sse
+
+logging:
+  level:
+    tool-call: INFO
